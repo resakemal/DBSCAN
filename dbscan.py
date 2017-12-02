@@ -229,10 +229,10 @@ if __name__ == "__main__":
     ### Coba training kalo datanya cuma 10
     cut_data = new_data[0:3000]
 
-    predicted_labels = MyDBSCAN(cut_data,0.55,200)
+    predicted_labels = MyDBSCAN(cut_data,0.8,450)
     visualizeCluster(predicted_labels)
     accuracy = calculateAccuracy(predicted_labels, labels)
-    print("Akurasi : " + str(accuracy) + "%")
+    print("Akurasi : " + str(accuracy * 100) + "%")
 
     ### Coba ngecek jarak -> buat ngira2 epsilon
     # for Pn in range(0, len(new_data)) :
