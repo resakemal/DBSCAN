@@ -187,6 +187,7 @@ def calculateAccuracy(predicted_labels, correct_labels):
 
     correct_labels1 = []
     correct_labels2 = []
+    label1 = 0
     for label in correct_labels:
         if label == 0:
             correct_labels1.append(1)
@@ -213,7 +214,8 @@ def calculateAccuracy(predicted_labels, correct_labels):
     return max(accuracy1, accuracy2)
 
 if __name__ == "__main__":
-    data = pd.read_csv('censusincome.csv')
+    # data = pd.read_csv('censusincome.csv')
+    data = pd.read_csv('censustest.csv')
 
     labels = data["income"]
     le = preprocessing.LabelEncoder().fit(labels)
@@ -227,9 +229,9 @@ if __name__ == "__main__":
     # print(MyDBSCAN(new_data,1,1000))
 
     ### Coba training kalo datanya cuma 10
-    cut_data = new_data[0:3000]
+    cut_data = new_data[0:30000]
 
-    predicted_labels = MyDBSCAN(cut_data,0.8,450)
+    predicted_labels = MyDBSCAN(cut_data,0.77,450)
     visualizeCluster(predicted_labels)
     accuracy = calculateAccuracy(predicted_labels, labels)
     print("Akurasi : " + str(accuracy * 100) + "%")
