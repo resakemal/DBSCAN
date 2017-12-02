@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import numpy
 
 from sklearn import preprocessing
 from numpy import genfromtxt
@@ -145,11 +144,37 @@ def regionQuery(D, P, eps):
     for Pn in range(0, len(D)):
         
         # If the distance is below the threshold, add it to the neighbors list.
-        if numpy.linalg.norm(D[P] - D[Pn]) < eps:
+        if np.linalg.norm(D[P] - D[Pn]) < eps:
            neighbors.append(Pn)
             
     return neighbors
 
+def visualizeCluster(labeled_data):
+    cluster = dict()
+    i = 1
+    for data in labeled_data:
+        if data in cluster.keys():
+            cluster[data].append(i)
+        else:
+            cluster[data] = [i]
+        i += 1
+
+    n_unclusterd_data = 0
+    if '-1' in cluster:
+        cluster['unclustered'] = mydict.pop('-1')
+        n_unclusterd_data = len(cluster['unclustered'])
+
+    for keys in cluster:
+        print("Data dalam cluster " + str(keys) + " :")
+        print(cluster[keys])
+        print("/// cluster " + str(keys) + "\n")
+
+    n_cluster = len(cluster.keys()) - 1
+    print('\n')
+    print("Terdapat " + str(n_cluster) + " cluster")
+    print("Jumlah data yang tidak memiliki cluster (noise) : " + str(n_unclusterd_data))
+    for keys in cluster:
+        print("Cluster " + str(keys) + " memiliki data sebanyak: " + str(len(cluster[keys])))
 
 
 if __name__ == "__main__":
@@ -159,14 +184,14 @@ if __name__ == "__main__":
 
     ### Ini training semua tapi lama banget kayaknya :v
     ### Ini epsilonnya 1 hasil kira2
-    print(MyDBSCAN(new_data,1,1000))
+    # print(MyDBSCAN(new_data,1,1000))
 
     ### Coba training kalo datanya cuma 10
-    # cut_data = new_data[0:10]
-    # print(cut_data)
-    # print(MyDBSCAN(cut_data,1,2))
+    cut_data = new_data[0:10000]
+    print(cut_data)
+    visualizeCluster(MyDBSCAN(cut_data,1,30))
 
     ### Coba ngecek jarak -> buat ngira2 epsilon
     # for Pn in range(0, len(new_data)) :
-    # 	print(numpy.linalg.norm(new_data[0] - new_data[Pn]))
+    # 	print(np.linalg.norm(new_data[0] - new_data[Pn]))
     
