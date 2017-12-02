@@ -184,15 +184,33 @@ def visualizeCluster(labeled_data):
         print("Cluster " + str(key) + " memiliki data sebanyak: " + str(len(cluster[key])))
 
 def calculateAccuracy(predicted_labels, correct_labels):
-    correct = 0
+
+    correct_labels1 = []
+    correct_labels2 = []
+    for label in correct_labels:
+        if label == 0:
+            correct_labels1.append(1)
+            correct_labels2.append(2)
+        else:
+            correct_labels1.append(2)
+            correct_labels2.append(1)
+
+    correct1 = 0
+    correct2 = 0
+
     if max(predicted_labels) == 2:
         for i in range(len(predicted_labels)):
-            if predicted_labels[i] == correct_labels[i]:
-                correct += 1
+            if predicted_labels[i] == correct_labels1[i]:
+                correct1 += 1
+            if predicted_labels[i] == correct_labels2[i]:
+                correct2 += 1
 
-    accuracy = correct / len(predicted_labels)
-    return accuracy
-
+    print("Predicted labels : " + str(len(predicted_labels)))
+    print("Correct labels1 : " + str(correct1))
+    print("Correct labels2 : " + str(correct2))
+    accuracy1 = correct1 / len(predicted_labels)
+    accuracy2 = correct2 / len(predicted_labels)
+    return max(accuracy1, accuracy2)
 
 if __name__ == "__main__":
     data = pd.read_csv('censusincome.csv')
@@ -200,8 +218,6 @@ if __name__ == "__main__":
     labels = data["income"]
     le = preprocessing.LabelEncoder().fit(labels)
     labels = le.transform(labels)
-    for i in range(len(labels)):
-        labels[i] += 1
 
     new_data = preprocess(data)
     print(new_data)
@@ -211,9 +227,9 @@ if __name__ == "__main__":
     # print(MyDBSCAN(new_data,1,1000))
 
     ### Coba training kalo datanya cuma 10
-    cut_data = new_data[0:1000]
+    cut_data = new_data[0:3000]
 
-    predicted_labels = MyDBSCAN(cut_data,1,200)
+    predicted_labels = MyDBSCAN(cut_data,0.55,200)
     visualizeCluster(predicted_labels)
     accuracy = calculateAccuracy(predicted_labels, labels)
     print("Akurasi : " + str(accuracy) + "%")
