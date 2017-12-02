@@ -6,7 +6,7 @@ from numpy import genfromtxt
 
 def preprocess(edit):
     edit.replace('?',np.NaN)
-    edit = edit[["age","education-num","capital-gain","capital-loss","hours-per-week"]]
+    edit = edit[["age","fnlwgt","education-num","capital-gain","capital-loss","hours-per-week"]]
     edit = edit.dropna()
     edit = preprocessing.normalize(edit)
     return edit
@@ -160,22 +160,26 @@ def visualizeCluster(labeled_data):
         i += 1
 
     n_unclusterd_data = 0
-    if '-1' in cluster:
-        cluster['unclustered'] = mydict.pop('-1')
+    if -1 in cluster:
+        cluster['unclustered'] = cluster.pop(-1)
         n_unclusterd_data = len(cluster['unclustered'])
+        print("Data noise :")
+        print(cluster['unclustered'])
 
+    print('\n')
     for keys in cluster:
-        print("Data dalam cluster " + str(keys) + " :")
-        print(cluster[keys])
-        print("/// cluster " + str(keys) + "\n")
+        if keys != 'unclustered':
+            print("Data dalam cluster " + str(keys) + " :")
+            print(cluster[keys])
+            print("/// cluster " + str(keys) + "\n")
 
     n_cluster = len(cluster.keys()) - 1
     print('\n')
     print("Terdapat " + str(n_cluster) + " cluster")
     print("Jumlah data yang tidak memiliki cluster (noise) : " + str(n_unclusterd_data))
     for keys in cluster:
-        print("Cluster " + str(keys) + " memiliki data sebanyak: " + str(len(cluster[keys])))
-
+        if keys != 'unclustered':
+            print("Cluster " + str(keys) + " memiliki data sebanyak: " + str(len(cluster[keys])))
 
 if __name__ == "__main__":
     data = pd.read_csv('censusincome.csv')
@@ -187,9 +191,9 @@ if __name__ == "__main__":
     # print(MyDBSCAN(new_data,1,1000))
 
     ### Coba training kalo datanya cuma 10
-    cut_data = new_data[0:10000]
+    cut_data = new_data[0:3000]
     print(cut_data)
-    visualizeCluster(MyDBSCAN(cut_data,1,30))
+    visualizeCluster(MyDBSCAN(cut_data,1,100))
 
     ### Coba ngecek jarak -> buat ngira2 epsilon
     # for Pn in range(0, len(new_data)) :
