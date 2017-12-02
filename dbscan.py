@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from sklearn import preprocessing
 from numpy import genfromtxt
+from sklearn import preprocessing
 
 def preprocess(edit):
     edit.replace('?',np.NaN)
@@ -161,27 +161,27 @@ def visualizeCluster(labeled_data):
             cluster[data] = [i]
         i += 1
 
+    print('\n')
     n_unclusterd_data = 0
     if -1 in cluster:
-        cluster['unclustered'] = cluster.pop(-1)
-        n_unclusterd_data = len(cluster['unclustered'])
+        unclustered = cluster.pop(-1)
+        n_unclusterd_data = len(unclustered)
         print("Data noise :")
-        print(cluster['unclustered'])
+        print(unclustered)
 
+    keys = sorted(list(cluster.keys()))
     print('\n')
-    for keys in cluster:
-        if keys != 'unclustered':
-            print("Data dalam cluster " + str(keys) + " :")
-            print(cluster[keys])
-            print("/// cluster " + str(keys) + "\n")
+    for key in keys:
+        print("Data dalam cluster " + str(key) + " :")
+        print(cluster[key])
+        print("/// cluster " + str(key) + "\n")
 
-    n_cluster = len(cluster.keys()) - 1
+    n_cluster = len(keys)
     print('\n')
     print("Terdapat " + str(n_cluster) + " cluster")
     print("Jumlah data yang tidak memiliki cluster (noise) : " + str(n_unclusterd_data))
-    for keys in cluster:
-        if keys != 'unclustered':
-            print("Cluster " + str(keys) + " memiliki data sebanyak: " + str(len(cluster[keys])))
+    for key in keys:
+        print("Cluster " + str(key) + " memiliki data sebanyak: " + str(len(cluster[key])))
 
 if __name__ == "__main__":
     data = pd.read_csv('censusincome.csv')
@@ -195,7 +195,7 @@ if __name__ == "__main__":
     ### Coba training kalo datanya cuma 10
     cut_data = new_data[0:1000]
     print(cut_data)
-    visualizeCluster(MyDBSCAN(cut_data,0.6,100))
+    visualizeCluster(MyDBSCAN(cut_data,0.3,20))
 
     ### Coba ngecek jarak -> buat ngira2 epsilon
     # for Pn in range(0, len(new_data)) :
