@@ -183,8 +183,26 @@ def visualizeCluster(labeled_data):
     for key in keys:
         print("Cluster " + str(key) + " memiliki data sebanyak: " + str(len(cluster[key])))
 
+def calculateAccuracy(predicted_labels, correct_labels):
+    correct = 0
+    if max(predicted_labels) == 2:
+        for i in range(len(predicted_labels)):
+            if predicted_labels[i] == correct_labels[i]:
+                correct += 1
+
+    accuracy = correct / len(predicted_labels)
+    return accuracy
+
+
 if __name__ == "__main__":
     data = pd.read_csv('censusincome.csv')
+
+    labels = data["income"]
+    le = preprocessing.LabelEncoder().fit(labels)
+    labels = le.transform(labels)
+    for i in range(len(labels)):
+        labels[i] += 1
+
     new_data = preprocess(data)
     print(new_data)
 
@@ -194,8 +212,11 @@ if __name__ == "__main__":
 
     ### Coba training kalo datanya cuma 10
     cut_data = new_data[0:1000]
-    print(cut_data)
-    visualizeCluster(MyDBSCAN(cut_data,0.3,20))
+
+    predicted_labels = MyDBSCAN(cut_data,1,200)
+    visualizeCluster(predicted_labels)
+    accuracy = calculateAccuracy(predicted_labels, labels)
+    print("Akurasi : " + str(accuracy) + "%")
 
     ### Coba ngecek jarak -> buat ngira2 epsilon
     # for Pn in range(0, len(new_data)) :
