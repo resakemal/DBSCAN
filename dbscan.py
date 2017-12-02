@@ -8,6 +8,8 @@ def preprocess(edit):
     edit.replace('?',np.NaN)
     edit = edit[["age","fnlwgt","education-num","capital-gain","capital-loss","hours-per-week"]]
     edit = edit.dropna()
+    std_scale = preprocessing.StandardScaler().fit(edit)
+    edit = std_scale.transform(edit)
     edit = preprocessing.normalize(edit)
     return edit
 
@@ -191,9 +193,9 @@ if __name__ == "__main__":
     # print(MyDBSCAN(new_data,1,1000))
 
     ### Coba training kalo datanya cuma 10
-    cut_data = new_data[0:3000]
+    cut_data = new_data[0:1000]
     print(cut_data)
-    visualizeCluster(MyDBSCAN(cut_data,1,100))
+    visualizeCluster(MyDBSCAN(cut_data,0.6,100))
 
     ### Coba ngecek jarak -> buat ngira2 epsilon
     # for Pn in range(0, len(new_data)) :
